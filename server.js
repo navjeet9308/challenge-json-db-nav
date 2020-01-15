@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 
 const api = require('./api')
 const middleware = require('./middleware')
-const studentModule = require('./modules/student');
+const studentModule = require('./modules/student')
 const PORT = process.env.PORT || 1337
 
 const app = express()

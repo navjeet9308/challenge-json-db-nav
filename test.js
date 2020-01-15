@@ -9,16 +9,16 @@ const server = require('./server')
 const endpoint = `http://localhost:${port}`
 const studentId = 'nav9308'
 const studentInfo = {
-  "courses": {
-    "english": {
-      "quizzes": {
-        "ye0ab62": {
-          "score": 95
+  courses: {
+    english: {
+      quizzes: {
+        ye0ab62: {
+          score: 95
         }
       }
     }
   }
-};
+}
 
 tape('PUT /:studentId/properties add property to studend Info', async function (t) {
   const url = `${endpoint}/${studentId}/personalInfo`
@@ -26,33 +26,30 @@ tape('PUT /:studentId/properties add property to studend Info', async function (
     name: 'Navjeet singh',
     register_no: 'uj98kh8_hdhfn89_yuba3d'
   }
-  
-  resetTestCaseData();
-  
+
+  resetTestCaseData()
+
   jsonist.put(url, data, (err, body, res) => {
-    let updatedStudent
     if (err) t.error(err)
     t.equal(res.statusCode, 200, 'http response code should be 200.')
-    updatedStudent = getFileData();
-    t.deepEqual(updatedStudent.personalInfo, data, 'Personal info should be equal.');
+    const updatedStudent = getFileData()
+    t.deepEqual(updatedStudent.personalInfo, data, 'Personal info should be equal.')
     t.end()
   })
-
 })
 
 tape('PUT /:studentId/:propertyName/properties checked nested properties', async function (t) {
   const url = `${endpoint}/${studentId}/test1/test2/test3`
   const data = {
-    test5: "test6"
+    test5: 'test6'
   }
 
   resetTestCaseData()
 
   jsonist.put(url, data, (err, body, res) => {
-    let updatedStudent
     if (err) t.error(err)
     t.equal(res.statusCode, 200, 'http response code should be 200.')
-    updatedStudent = getFileData()
+    const updatedStudent = getFileData()
     t.deepEqual(updatedStudent.test1.test2.test3, data, 'deep object test success.')
     t.end()
   })
@@ -63,7 +60,7 @@ tape('PUT /:studentId/properties create new file for student if does not exits',
     mars: 'is red'
   }
 
-  removeFile();
+  removeFile()
 
   jsonist.put(url, data, (err) => {
     if (err) t.error(err)
@@ -104,20 +101,20 @@ tape('GET /:studentId/properties returns Not found if the property does not exis
 })
 tape('DELETE /:studentId/:propertyName deletes a student property', async function (t) {
   const url = `${endpoint}/${studentId}/courses`
-  resetTestCaseData();
+  resetTestCaseData()
   jsonist.delete(url, (err, body, res) => {
-    if (err) t.error(err);
-    t.equal(res.statusCode, 200,  'http response code should be 200.')
-    t.ok(body.hasOwnProperty('success'), 'response should have success key.')
-    
-    const student = getFileData();
-    t.notOk(student.hasOwnProperty('address'), 'deleted property should not exits on student file')
+    if (err) t.error(err)
+    t.equal(res.statusCode, 200, 'http response code should be 200.')
+    t.ok(Object.prototype.hasOwnProperty.call(body, 'success'), 'response should have success key.')
+
+    const student = getFileData()
+    t.notOk(Object.prototype.hasOwnProperty.call(student, 'address'), 'deleted property should not exits on student file')
     t.end()
   })
 })
 tape('DELETE /:studentId/:propertyName returns 404 file does not exits', async function (t) {
   const url = `${endpoint}/${studentId}/random`
- jsonist.delete(url, (err, body, res) => {
+  jsonist.delete(url, (err, body, res) => {
     if (err) t.error(err)
     t.equal(res.statusCode, 404, 'http resonse status code should be 404')
     t.end()
@@ -126,7 +123,7 @@ tape('DELETE /:studentId/:propertyName returns 404 file does not exits', async f
 
 tape('DELETE /:studentId/:propertyName returns 404 if the property does not exist', async function (t) {
   const url = `${endpoint}/${studentId}/invalid_key`
-  resetTestCaseData();
+  resetTestCaseData()
   jsonist.delete(url, (err, body, res) => {
     if (err) t.error(err)
     t.equal(res.statusCode, 404, 'http resonse status code should be 404')
@@ -156,7 +153,7 @@ function removeFile () {
 }
 function resetTestCaseData () {
   removeFile()
-  resetFile();
+  resetFile()
 }
 
 function getDir () {
@@ -175,9 +172,8 @@ function getFileData () {
   return JSON.parse(fs.readFileSync(filePath()))
 }
 
-
 tape('cleanup', function (t) {
-  resetTestCaseData();
+  resetTestCaseData()
   server.close()
   t.end()
 })

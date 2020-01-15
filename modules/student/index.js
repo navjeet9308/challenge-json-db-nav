@@ -1,3 +1,3 @@
 module.exports = {
-    route : require('./studentRoute')
+  route: require('./studentRoute')
 }
