@@ -1,18 +1,6 @@
 {
   "courses": {
-    "calculus": {
-      "quizzes": {
-        "ye0ab61": {
-          "score": 98
-        }
-      }
-    },
-    "web-dev": {
-      "quizzes": {
-        "ye0ab61": {
-          "score": 98
-        }
-      }
-    }
+    "calculus": {},
+    "web-dev": {}
   }
 }

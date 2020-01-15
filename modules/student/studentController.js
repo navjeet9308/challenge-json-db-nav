@@ -11,6 +11,8 @@ module.exports = {
         res.json(studentProperties);
     },
     deleteStudentProperties: async (req, res, next) => {
-        res.json({message : 'delete route'});
-    }
+        const isDeleted = await studentHelper.deleteStudentProperties(req.loadDashProperties, req.params.studentId);
+        if(!isDeleted) return next();
+        res.json({ success : true, message : 'Student properties deleted.' });
+    },
 }

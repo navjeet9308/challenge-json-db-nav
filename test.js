@@ -102,7 +102,37 @@ tape('GET /:studentId/properties returns Not found if the property does not exis
     t.end()
   })
 })
+tape('DELETE /:studentId/:propertyName deletes a student property', async function (t) {
+  const url = `${endpoint}/${studentId}/courses`
+  resetTestCaseData();
+  jsonist.delete(url, (err, body, res) => {
+    if (err) t.error(err);
+    t.equal(res.statusCode, 200,  'http response code should be 200.')
+    t.ok(body.hasOwnProperty('success'), 'response should have success key.')
+    
+    const student = getFileData();
+    t.notOk(student.hasOwnProperty('address'), 'deleted property should not exits on student file')
+    t.end()
+  })
+})
+tape('DELETE /:studentId/:propertyName returns 404 file does not exits', async function (t) {
+  const url = `${endpoint}/${studentId}/random`
+ jsonist.delete(url, (err, body, res) => {
+    if (err) t.error(err)
+    t.equal(res.statusCode, 404, 'http resonse status code should be 404')
+    t.end()
+  })
+})
 
+tape('DELETE /:studentId/:propertyName returns 404 if the property does not exist', async function (t) {
+  const url = `${endpoint}/${studentId}/invalid_key`
+  resetTestCaseData();
+  jsonist.delete(url, (err, body, res) => {
+    if (err) t.error(err)
+    t.equal(res.statusCode, 404, 'http resonse status code should be 404')
+    t.end()
+  })
+})
 tape('health', async function (t) {
   const url = `${endpoint}/health`
   jsonist.get(url, (err, body) => {

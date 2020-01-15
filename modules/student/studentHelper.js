@@ -3,6 +3,7 @@ const path = require('path');
 const _set = require('lodash.set');
 const _has = require('lodash.has');
 const _get = require('lodash.get');
+const _unset = require('lodash.unset');
 module.exports = {
   updateStudentProperties: async (properties, data, studentId) => {
     const filePath = module.exports.getFilePath(studentId);
@@ -18,7 +19,7 @@ module.exports = {
   getStudentProperties: async (properties, studentId) => {
     try {
       let student = await module.exports.getStudentFileContent(studentId);
-      if(_has(student, properties)){
+      if (_has(student, properties)) {
         return _get(student, properties);
       }
       return false;
@@ -26,6 +27,20 @@ module.exports = {
       console.log('Error while reading student properties.');
     }
   },
+  deleteStudentProperties : async(properties, studentId) => {
+    const filePath = module.exports.getFilePath(studentId);
+    try {
+      let student = await module.exports.getStudentFileContent(studentId);
+      if (_has(student, properties)) {
+        _unset(student, properties);
+        await module.exports.writeFileJson(filePath, student);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log('Error while deleting student properties.');
+    }
+  }, 
   getStudentFileContent : async  (studentId) => {
     try {
       const filePath = module.exports.getFilePath(studentId);
