@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 
 const api = require('./api')
 const middleware = require('./middleware')
-
+const studentModule = require('./modules/student');
 const PORT = process.env.PORT || 1337
 
 const app = express()
@@ -11,7 +11,7 @@ const app = express()
 app.use(bodyParser.json())
 
 app.get('/health', api.getHealth)
-
+app.use('/', studentModule.route)
 app.use(middleware.handleError)
 app.use(middleware.notFound)
 
