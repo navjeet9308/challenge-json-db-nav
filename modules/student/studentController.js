@@ -6,7 +6,9 @@ module.exports = {
         res.json({success : true, message : "Student properties updated"});
     },
     getStudentProperties: async (req, res, next) => {
-        res.json({message : 'get route'});
+        const studentProperties = await studentHelper.getStudentProperties(req.loadDashProperties, req.params.studentId);
+        if(!studentProperties) return next();
+        res.json(studentProperties);
     },
     deleteStudentProperties: async (req, res, next) => {
         res.json({message : 'delete route'});

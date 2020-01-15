@@ -72,6 +72,37 @@ tape('PUT /:studentId/properties create new file for student if does not exits',
   })
 })
 
+tape('GET /:studentId/properties match student properties', async function (t) {
+  const url = `${endpoint}/${studentId}/courses`
+
+  resetTestCaseData()
+
+  jsonist.get(url, (err, body, res) => {
+    if (err) t.error(err)
+    t.equal(res.statusCode, 200, 'http resonse code should be 200.')
+    t.deepEqual(body, studentInfo.courses, 'course info needs to be equal.')
+    t.end()
+  })
+})
+
+tape('GET /:studentId/properties returns Not found if the student file does not exist', async function (t) {
+  const url = `${endpoint}/random12903/courses`
+  jsonist.get(url, (err, body, res) => {
+    if (err) t.error(err)
+    t.equal(res.statusCode, 404, 'http resonse status code should be 404')
+    t.end()
+  })
+})
+tape('GET /:studentId/properties returns Not found if the property does not exist', async function (t) {
+  const url = `${endpoint}/${studentId}/courses/punjabi`
+  resetTestCaseData()
+  jsonist.get(url, (err, body, res) => {
+    if (err) t.error(err)
+    t.equal(res.statusCode, 404, 'http resonse status code should be 404')
+    t.end()
+  })
+})
+
 tape('health', async function (t) {
   const url = `${endpoint}/health`
   jsonist.get(url, (err, body) => {
@@ -82,7 +113,6 @@ tape('health', async function (t) {
 })
 
 function resetFile () {
-  // Create the directory if needed.
   if (!fs.existsSync(getDir())) fs.mkdirSync(getDir())
   fs.writeFileSync(filePath(), JSON.stringify(studentInfo))
 }
@@ -117,6 +147,7 @@ function getFileData () {
 
 
 tape('cleanup', function (t) {
+  resetTestCaseData();
   server.close()
   t.end()
 })

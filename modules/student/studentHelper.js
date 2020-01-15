@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const _set = require('lodash.set');
+const _has = require('lodash.has');
+const _get = require('lodash.get');
 module.exports = {
   updateStudentProperties: async (properties, data, studentId) => {
     const filePath = module.exports.getFilePath(studentId);
@@ -9,22 +11,34 @@ module.exports = {
       _set(student, properties, data);
       await module.exports.writeFileJson(filePath, student);
     } catch (error) {
-      console.log('Error while updating student properties');
+      console.log('Error while updating student properties.');
       throw error;
+    }
+  },
+  getStudentProperties: async (properties, studentId) => {
+    try {
+      let student = await module.exports.getStudentFileContent(studentId);
+      if(_has(student, properties)){
+        return _get(student, properties);
+      }
+      return false;
+    } catch (error) {
+      console.log('Error while reading student properties.');
     }
   },
   getStudentFileContent : async  (studentId) => {
     try {
       const filePath = module.exports.getFilePath(studentId);
       return await module.exports.checkFileIfExits(filePath) ? 
-        await module.exports.readFileJson(filePath) 
+        await module.exports.readFileJson(filePath)
         : 
         {};
     }catch (error) {
+      console.log('Error while reading user file.');
       throw error;
     }
   },
-    // return promise to be used with await to check if file exits.
+   // return promise to be used with await to check if file exits.
   checkFileIfExits : (filePath) => {
     return new Promise(async(resolve) => {
       fs.access(filePath, fs.F_OK, (err) => {
